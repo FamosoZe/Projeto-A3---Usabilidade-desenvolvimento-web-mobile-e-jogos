@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados Parciais de Votação 2024</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        canvas {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Resultados Parciais de Votação 2024</h1>
+        <canvas id="votingResults"></canvas>
+        <button onclick="goBack()">Voltar para a Votação</button>
+    </div>
+
+    <script>
+        const candidatos = ['João Silva', 'Maria Soares', 'Carlos Pereira', 'Fernando Almeida'];
+        const votos = [0, 0, 0, 0]; // Inicialmente, todos têm 0 votos
+
+        function updateVotes(candidate) {
+            const index = candidatos.indexOf(candidate);
+            if (index !== -1) {
+                votos[index]++;
+            }
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('votingResults').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: candidatos,
+                    datasets: [{
+                        label: 'Número de Votos',
+                        data: votos,
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(255, 99, 132, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function goBack() {
+            window.location.href = "votacao.html"; // Redireciona de volta para a página de votação
+        }
+
+        // Atualiza os votos e renderiza o gráfico
+        const urlParams = new URLSearchParams(window.location.search);
+        const candidateVoted = urlParams.get('name');
+        if (candidateVoted) {
+            updateVotes(candidateVoted);
+            renderChart();
+        }
+    </script>
+
+</body>
+
+</html>
