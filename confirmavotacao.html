@@ -62,7 +62,6 @@
     </div>
 
     <script>
-        // Função para pegar os parâmetros da URL
         function getQueryParams() {
             const urlParams = new URLSearchParams(window.location.search);
             return {
@@ -72,24 +71,37 @@
             };
         }
 
-        // Função para preencher a página com os dados do candidato
         function populateCandidateDetails() {
-            const params = getQueryParams();
-            document.getElementById('candidate-name').textContent = params.name;
-            document.getElementById('candidate-image').src = params.image;
-            document.getElementById('candidate-description').textContent = params.description;
-        }
+    const params = getQueryParams();
+    if (params.name && params.image && params.description) {
+        document.getElementById('candidate-name').textContent = params.name;
+        document.getElementById('candidate-image').src = params.image;
+        document.getElementById('candidate-description').textContent = params.description;
+    } else {
+        alert('Dados do candidato não encontrados. Retornando à votação.');
+        goBack();
+    }
+}
 
-        window.onload = populateCandidateDetails;
 
         function confirmChoice() {
             const params = getQueryParams();
-            window.location.href = `resultados.html?name=${encodeURIComponent(params.name)}`; // Altere para o nome correto do arquivo de resultados
+            const votos = JSON.parse(localStorage.getItem('votos')) || [0, 0, 0, 0];
+            const index = ['João Silva', 'Maria Soares', 'Carlos Pereira', 'Fernando Almeida'].indexOf(params.name);
+
+            if (index !== -1) {
+                votos[index] += 1;
+                localStorage.setItem('votos', JSON.stringify(votos));
+            }
+
+            window.location.href = 'resultados.html';
         }
 
         function goBack() {
-            window.location.href = 'votacao.html'; // Altere para o nome do seu arquivo de votação
+            window.location.href = 'votacao.html';
         }
+
+        window.onload = populateCandidateDetails;
     </script>
 </body>
 
