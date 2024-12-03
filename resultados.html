@@ -29,7 +29,6 @@
 </head>
 
 <body>
-
     <div class="container">
         <h1>Resultados Parciais de Votação 2024</h1>
         <canvas id="votingResults"></canvas>
@@ -38,17 +37,25 @@
 
     <script>
         const candidatos = ['João Silva', 'Maria Soares', 'Carlos Pereira', 'Fernando Almeida'];
-        const votos = [0, 0, 0, 0]; // Inicialmente, todos têm 0 votos
 
-        function updateVotes(candidate) {
-            const index = candidatos.indexOf(candidate);
-            if (index !== -1) {
-                votos[index]++;
-            }
+        function getVotes() {
+    try {
+        const votos = JSON.parse(localStorage.getItem('votos'));
+        if (Array.isArray(votos) && votos.length === candidatos.length) {
+            return votos;
+        } else {
+            return [0, 0, 0, 0]; // Retorna valores padrão
         }
+    } catch (error) {
+        console.error('Erro ao carregar votos do localStorage:', error);
+        return [0, 0, 0, 0];
+    }
+}
 
         function renderChart() {
+            const votos = getVotes();
             const ctx = document.getElementById('votingResults').getContext('2d');
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -82,18 +89,11 @@
         }
 
         function goBack() {
-            window.location.href = "votacao.html"; // Redireciona de volta para a página de votação
+            window.location.href = "votacao.html";
         }
 
-        // Atualiza os votos e renderiza o gráfico
-        const urlParams = new URLSearchParams(window.location.search);
-        const candidateVoted = urlParams.get('name');
-        if (candidateVoted) {
-            updateVotes(candidateVoted);
-            renderChart();
-        }
+        document.addEventListener('DOMContentLoaded', renderChart);
     </script>
-
 </body>
 
 </html>
